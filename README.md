@@ -1,22 +1,37 @@
 # Git Commit Quality Analyzer (Java + Maven + JavaFX)
 
-# Git Commit Quality Analyzer (Java + Maven + JavaFX)
+This project analyzes Git commit messages from a local repository and scores them  
+based on length, clarity, and meaningful keywords. It then classifies commits into  
+quality levels and (later) visualizes results using a JavaFX interface.
 
-This project analyzes Git commit messages from a local repository and scores them
-based on length, clarity, and keywords. It then classifies commits into quality
-levels and visualizes the results using a JavaFX interface.
+---
 
 ## Tech Stack
 
-- Java (17+)
-- Maven
-- JavaFX
-- Git
+- **Java 17+**  
+- **Maven**  
+- **JavaFX**  
+- **Git** (commit history extraction)
 
-## Status
+---
 
-Day 1:
-- Maven project initialized
-- Basic package structure created
-- Placeholder model, core, and UI classes added
+## Development Progress (Daily Log)
+
+### **Day 1 — Project Setup**
+- Maven project initialized  
+- Basic package structure created (`model`, `core`, `ui`)  
+- Placeholder classes added (`CommitRecord`, `CommitScore`, `CommitAnalyzer`, `MainApp`)  
+- Initial README and `.gitignore` configured  
+- Verified Maven + JavaFX compile and run
+
+---
+
+### **Day 2 — Git Log Reader Implementation**
+- Implemented `GitLogReader` to execute `git log` and fetch commit history  
+- Parsed commit data into `CommitRecord` objects  
+- Added testing runner (`DebugRunner`) to print commits to console  
+- Successfully retrieved commit logs from the local repository  
+- Added safe error-handling and output parsing
+
+---
 
