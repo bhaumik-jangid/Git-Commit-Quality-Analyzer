@@ -46,3 +46,11 @@ quality levels and (later) visualizes results using a JavaFX interface.
 - Created JavaFX main window using FXML
 - Added table for commits, summary labels, and pie chart placeholder
 - Wired UI to MainController with dummy data
+
+---
+
+### Day 5:
+- Connected Git log reader and commit analyzer to the JavaFX UI
+- Table now displays real commit history with scores and categories
+- Summary labels and pie chart use live data from the repository
+- Added a Refresh button to reload analysis
