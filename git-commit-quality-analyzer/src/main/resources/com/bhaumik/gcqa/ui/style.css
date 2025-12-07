@@ -1,0 +1,12 @@
+.table-view {
+    -fx-font-size: 12px;
+}
+
+.tool-bar {
+    -fx-padding: 8;
+    -fx-spacing: 10;
+}
+
+.pie-chart {
+    -fx-legend-visible: true;
+}

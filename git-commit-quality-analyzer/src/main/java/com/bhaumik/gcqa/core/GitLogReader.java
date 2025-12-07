@@ -50,10 +50,15 @@ public class GitLogReader {
             }
         }
 
-        int exitCode = process.waitFor();
-
-        if (exitCode != 0) {
-            throw new IOException("git log failed (exit code: " + exitCode + ")");
+        try {
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                System.err.println("git log command failed with exit code " + exitCode);
+                return List.of();
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IOException("Git log command interrupted", e);
         }
 
 
