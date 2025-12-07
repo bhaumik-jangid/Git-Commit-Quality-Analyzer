@@ -20,15 +20,12 @@
     <top>
         <ToolBar>
             <Label text="Git Commit Quality Analyzer"/>
-            <Label text="   "/>
-            <Label text="(using local Git repo)"/>
+            <Label text="  |  Repo:"/>
+            <Label fx:id="repoPathLabel" text="(default)"/>
 
-            <!-- Spacer -->
             <Label text="                         "/>
 
-            <!-- Refresh button -->
-            <javafx.scene.control.Button text="Refresh"
-                                        onAction="#onRefreshClicked"/>
+            <Button text="Refresh" onAction="#onRefreshClicked"/>
         </ToolBar>
     </top>
 
@@ -68,16 +65,17 @@
                 <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
             </padding>
 
-            <children>
-                <Label text="Good:"/>
-                <Label fx:id="goodCountLabel" text="0"/>
+            <Label text="Good:"/>
+            <Label fx:id="goodCountLabel" text="0"/>
 
-                <Label text="Average:"/>
-                <Label fx:id="averageCountLabel" text="0"/>
+            <Label text="Average:"/>
+            <Label fx:id="averageCountLabel" text="0"/>
 
-                <Label text="Poor:"/>
-                <Label fx:id="poorCountLabel" text="0"/>
-            </children>
+            <Label text="Poor:"/>
+            <Label fx:id="poorCountLabel" text="0"/>
+
+            <Label text="   Status:"/>
+            <Label fx:id="statusLabel" text="Ready"/>
         </HBox>
     </bottom>
 </BorderPane>

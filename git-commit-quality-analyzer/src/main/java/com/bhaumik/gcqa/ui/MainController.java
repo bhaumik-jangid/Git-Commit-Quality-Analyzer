@@ -29,6 +29,9 @@ public class MainController {
             "/home/azazil/Desktop/Cyni";
 
     @FXML
+    private Label statusLabel;
+
+    @FXML
     private TableView<CommitViewModel> commitTable;
 
     @FXML
@@ -61,6 +64,10 @@ public class MainController {
     @FXML
     private Label poorCountLabel;
 
+    @FXML
+    private Label repoPathLabel;
+
+
     private final ObservableList<CommitViewModel> commitData =
             FXCollections.observableArrayList();
 
@@ -81,6 +88,9 @@ public class MainController {
 
         commitTable.setItems(commitData);
 
+        repoPathLabel.setText(DEFAULT_REPO_PATH);
+        commitTable.setItems(commitData);
+
         // Initial load
         loadDataFromRepo();
     }
@@ -92,6 +102,7 @@ public class MainController {
 
     private void loadDataFromRepo() {
         commitData.clear();
+        statusLabel.setText("Loading commits...");
 
         GitLogReader reader = new GitLogReader(Paths.get(DEFAULT_REPO_PATH));
 
@@ -100,22 +111,26 @@ public class MainController {
         int poor = 0;
 
         try {
-            // You can change limit if you want more/less commits
-            List<CommitRecord> records = reader.readCommits(50);
+                List<CommitRecord> records = reader.readCommits(50);
 
-            for (CommitRecord record : records) {
+                for (CommitRecord record : records) {
                 CommitScore score = analyzer.analyze(record);
                 String category = score.getCategory();
 
                 switch (category) {
-                    case "Good" -> good++;
-                    case "Average" -> average++;
-                    case "Poor" -> poor++;
-                    default -> { }
+                        case "Good" -> good++;
+                        case "Average" -> average++;
+                        case "Poor" -> poor++;
+                        default -> { }
+                }
+
+                String hashShort = record.getHash();
+                if (hashShort.length() > 7) {
+                        hashShort = hashShort.substring(0, 7);
                 }
 
                 CommitViewModel vm = new CommitViewModel(
-                        record.getHash().substring(0, 7),
+                        hashShort,
                         record.getAuthor(),
                         record.getDateTime().format(dateFormatter),
                         record.getMessage(),
@@ -124,15 +139,26 @@ public class MainController {
                 );
 
                 commitData.add(vm);
-            }
+                }
 
-            updateSummaryAndChart(good, average, poor);
+                updateSummaryAndChart(good, average, poor);
+
+                statusLabel.setText("Loaded " + commitData.size() + " commits from repository.");
 
         } catch (IOException e) {
-            // For Day 5, just print - proper UI error handling on Day 6
-            System.err.println("Failed to load git commits: " + e.getMessage());
-            commitData.clear();
-            updateSummaryAndChart(0, 0, 0);
+                System.err.println("Failed to load git commits: " + e.getMessage());
+                commitData.clear();
+                updateSummaryAndChart(0, 0, 0);
+
+                statusLabel.setText("Error: " + e.getMessage());
+
+                // Show a dialog to user
+                javafx.scene.control.Alert alert =
+                        new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Failed to load commits");
+                alert.setContentText(e.getMessage());
+                alert.showAndWait();
         }
     }
 

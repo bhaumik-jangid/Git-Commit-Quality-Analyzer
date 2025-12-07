@@ -54,3 +54,11 @@ quality levels and (later) visualizes results using a JavaFX interface.
 - Table now displays real commit history with scores and categories
 - Summary labels and pie chart use live data from the repository
 - Added a Refresh button to reload analysis
+
+---
+
+### Day 6:
+- Improved error handling for git log execution (exit codes, stderr messages)
+- UI now displays status messages and shows an error dialog on failures
+- Shortened hashes safely without risking substring errors
+- Displayed the active repository path in the toolbar for clarity
