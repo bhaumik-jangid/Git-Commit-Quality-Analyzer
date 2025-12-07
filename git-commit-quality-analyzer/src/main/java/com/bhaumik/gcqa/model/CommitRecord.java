@@ -1,3 +1,5 @@
+// Represents a single Git commit entry
+
 package com.bhaumik.gcqa.model;
 
 import java.time.LocalDateTime;

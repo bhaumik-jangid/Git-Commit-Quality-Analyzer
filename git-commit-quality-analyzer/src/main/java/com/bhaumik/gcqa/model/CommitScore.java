@@ -1,3 +1,5 @@
+// Represents evaluation score and category for a commit message
+
 package com.bhaumik.gcqa.model;
 
 public class CommitScore {

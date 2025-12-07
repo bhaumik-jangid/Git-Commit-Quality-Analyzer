@@ -1,3 +1,5 @@
+// Reads commit history from a local Git repository using git log
+
 package com.bhaumik.gcqa.core;
 
 import com.bhaumik.gcqa.model.CommitRecord;

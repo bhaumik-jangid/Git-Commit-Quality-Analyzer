@@ -1,3 +1,5 @@
+// Entry point for the JavaFX application
+
 package com.bhaumik.gcqa.ui;
 
 import javafx.application.Application;

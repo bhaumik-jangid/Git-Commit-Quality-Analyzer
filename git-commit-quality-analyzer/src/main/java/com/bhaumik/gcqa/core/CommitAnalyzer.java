@@ -1,3 +1,5 @@
+// Scores commit messages based on length, keywords, and patterns.
+
 package com.bhaumik.gcqa.core;
 
 import com.bhaumik.gcqa.model.CommitRecord;
