@@ -35,3 +35,7 @@ quality levels and (later) visualizes results using a JavaFX interface.
 
 ---
 
+### Day 3:
+- Commit scoring engine implemented
+- Classifies commit messages into Good / Average / Poor
+- Basic console output for analyzed commits
