@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,12 +51,17 @@ public class GitLogReader {
             }
         }
 
-        int exitCode = process.waitFor();
-
-        if (exitCode != 0) {
-            throw new IOException("git log failed (exit code: " + exitCode + ")");
+        // waitFor can throw InterruptedException — handle it and propagate as IOException
+        try {
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                throw new IOException("git log failed (exit code: " + exitCode + ")");
+            }
+        } catch (InterruptedException e) {
+            // restore interrupt status and wrap
+            Thread.currentThread().interrupt();
+            throw new IOException("Interrupted while waiting for git process", e);
         }
-
 
         return records;
     }
@@ -71,9 +77,10 @@ public class GitLogReader {
         String dateStr = parts[2].trim();
         String message = parts[3].trim();
 
-        LocalDateTime dateTime = LocalDateTime.parse(dateStr, dateTimeFormatter);
+        // git --date=iso produces an offset like "2025-12-09 10:00:00 +0530"
+        OffsetDateTime odt = OffsetDateTime.parse(dateStr, dateTimeFormatter);
+        LocalDateTime dateTime = odt.toLocalDateTime();
 
         return new CommitRecord(hash, author, dateTime, message);
     }
 }
-
