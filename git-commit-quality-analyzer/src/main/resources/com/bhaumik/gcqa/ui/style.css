@@ -1,12 +1,165 @@
-.table-view {
+/* GLOBAL THEME -------------------------------------------------- */
+.root {
+    /* Main Background from image */
+    -fx-background-color: #1a1e29; 
+    -fx-text-fill: #e0e6ed;
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
     -fx-font-size: 12px;
 }
 
+/* TOP TOOLBAR -------------------------------------------------- */
 .tool-bar {
-    -fx-padding: 8;
-    -fx-spacing: 10;
+    -fx-background-color: #1a1e29;
+    -fx-padding: 10 20;
+    -fx-border-color: #2b3245;
+    -fx-border-width: 0 0 1 0;
 }
 
-.pie-chart {
-    -fx-legend-visible: true;
+.tool-bar .label {
+    -fx-text-fill: #a0aabf;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* SEARCH BAR -------------------------------------------------- */
+.text-field {
+    -fx-background-color: #0f1219;
+    -fx-text-fill: #ffffff;
+    -fx-prompt-text-fill: #5a6478;
+    -fx-background-radius: 6;
+    -fx-border-color: #2b3245;
+    -fx-border-radius: 6;
+    -fx-padding: 8;
+}
+.text-field:focused {
+    -fx-border-color: #00d4ff; /* Neon Blue focus */
+}
+
+/* BUTTONS -------------------------------------------------- */
+.button {
+    -fx-background-color: #262b3d;
+    -fx-text-fill: #00d4ff;
+    -fx-background-radius: 6;
+    -fx-border-color: #3e455c;
+    -fx-border-radius: 6;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+.button:hover {
+    -fx-background-color: #353b52;
+    -fx-border-color: #00d4ff;
+}
+.button:pressed {
+    -fx-background-color: #00d4ff;
+    -fx-text-fill: #1a1e29;
+}
+
+/* METRIC CARDS -------------------------------------------------- */
+.card {
+    -fx-background-color: #262b3d; /* Card bg from image */
+    -fx-background-radius: 8;
+    -fx-border-color: #3e455c;
+    -fx-border-radius: 8;
+    -fx-padding: 15;
+    -fx-effect: null; /* Removed heavy shadow for flat look */
+}
+
+.card-title {
+    -fx-text-fill: #a0aabf;
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+    -fx-text-transform: uppercase;
+}
+
+.card-value {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 28px;
+    -fx-font-weight: 800;
+}
+
+/* Specific color overrides for metrics to match image */
+.metric-blue { -fx-text-fill: #00d4ff; }
+.metric-green { -fx-text-fill: #2ec4b6; }
+.metric-orange { -fx-text-fill: #ff9f1c; }
+
+/* TABLE VIEW -------------------------------------------------- */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: #3e455c;
+    -fx-border-radius: 8;
+    -fx-padding: 5; /* Gap between border and content */
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #262b3d;
+    -fx-background-radius: 8 8 0 0;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #3e455c;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #00d4ff; /* Neon headers */
+    -fx-font-weight: bold;
+}
+
+.table-row-cell {
+    -fx-background-color: #1a1e29; /* Dark rows */
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #2b3245;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #1f2433; /* Slightly lighter odd rows */
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #2b3245;
+}
+
+.table-cell {
+    -fx-text-fill: #e0e6ed;
+    -fx-alignment: CENTER-LEFT;
+}
+
+/* CHART STYLING -------------------------------------------------- */
+.chart-card {
+    -fx-background-color: #262b3d;
+    -fx-background-radius: 8;
+    -fx-border-color: #3e455c;
+    -fx-border-radius: 8;
+    -fx-padding: 10;
+}
+
+.chart-title {
+    -fx-text-fill: #a0aabf;
+    -fx-font-size: 12px;
+}
+
+/* Clean up chart junk */
+.chart { -fx-padding: 0; }
+.chart-plot-background { -fx-background-color: transparent; }
+.chart-vertical-grid-lines { -fx-stroke: transparent; }
+.chart-horizontal-grid-lines { -fx-stroke: #3e455c; -fx-stroke-dash-array: 4 4; }
+.axis { -fx-tick-label-fill: #7d889b; -fx-tick-mark-visible: false; }
+.axis-label { -fx-text-fill: #7d889b; }
+
+/* Line Chart Neon Style */
+.default-color0.chart-series-line { -fx-stroke: #00d4ff; -fx-stroke-width: 2px; }
+.default-color0.chart-line-symbol { -fx-background-color: #00d4ff, white; -fx-background-radius: 5px; -fx-padding: 3px; }
+
+/* Pie Chart Colors (You may need to set these in Java, but defaults here) */
+.default-color0.chart-pie { -fx-pie-color: #00d4ff; }
+.default-color1.chart-pie { -fx-pie-color: #ff9f1c; }
+.default-color2.chart-pie { -fx-pie-color: #2ec4b6; }
+.chart-pie-label { -fx-fill: #ffffff; }
+
+/* BOTTOM BAR -------------------------------------------------- */
+.hbox-bottom {
+    -fx-background-color: #1a1e29;
+    -fx-border-color: #2b3245;
+    -fx-border-width: 1 0 0 0;
 }
