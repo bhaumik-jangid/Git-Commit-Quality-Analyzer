@@ -39,3 +39,10 @@ quality levels and (later) visualizes results using a JavaFX interface.
 - Commit scoring engine implemented
 - Classifies commit messages into Good / Average / Poor
 - Basic console output for analyzed commits
+
+---
+
+### Day 4:
+- Created JavaFX main window using FXML
+- Added table for commits, summary labels, and pie chart placeholder
+- Wired UI to MainController with dummy data

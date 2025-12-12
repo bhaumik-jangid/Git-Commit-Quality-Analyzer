@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.bhaumik.gcqa.ui.MainController">
+
+    <top>
+        <ToolBar>
+            <Label text="Git Commit Quality Analyzer"/>
+        </ToolBar>
+    </top>
+
+    <center>
+        <VBox spacing="8.0">
+            <padding>
+                <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
+            </padding>
+
+            <TableView fx:id="commitTable" prefHeight="300.0">
+                <columns>
+                    <TableColumn fx:id="hashColumn" text="Hash" prefWidth="80.0"/>
+                    <TableColumn fx:id="authorColumn" text="Author" prefWidth="120.0"/>
+                    <TableColumn fx:id="dateColumn" text="Date" prefWidth="160.0"/>
+                    <TableColumn fx:id="messageColumn" text="Message" prefWidth="280.0"/>
+                    <TableColumn fx:id="scoreColumn" text="Score" prefWidth="80.0"/>
+                    <TableColumn fx:id="categoryColumn" text="Category" prefWidth="100.0"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+    <right>
+        <TitledPane text="Commit Quality Distribution" collapsible="false">
+            <content>
+                <PieChart fx:id="qualityPieChart" prefWidth="250.0" prefHeight="250.0"/>
+            </content>
+        </TitledPane>
+    </right>
+
+    <bottom>
+        <HBox spacing="20.0">
+            <padding>
+                <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
+            </padding>
+
+            <Label text="Good:"/>
+            <Label fx:id="goodCountLabel" text="0"/>
+
+            <Label text="Average:"/>
+            <Label fx:id="averageCountLabel" text="0"/>
+
+            <Label text="Poor:"/>
+            <Label fx:id="poorCountLabel" text="0"/>
+        </HBox>
+    </bottom>
+</BorderPane>
