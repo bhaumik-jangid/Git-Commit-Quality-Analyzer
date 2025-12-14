@@ -65,7 +65,7 @@ public class MainController {
     private Label statusLabel;
 
     @FXML
-    private Label repoPathLabel;
+    private javafx.scene.control.TextField repoPathField;
 
 
     private final ObservableList<CommitViewModel> commitData =
@@ -86,8 +86,10 @@ public class MainController {
         scoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
         categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
 
-        repoPathLabel.setText(DEFAULT_REPO_PATH);
         commitTable.setItems(commitData);
+
+        // Set default repo path in text field
+        repoPathField.setText(DEFAULT_REPO_PATH);
 
         // Initial load
         loadDataFromRepo();
@@ -102,7 +104,15 @@ public class MainController {
         commitData.clear();
         statusLabel.setText("Loading commits...");
 
-        GitLogReader reader = new GitLogReader(Paths.get(DEFAULT_REPO_PATH));
+        String pathText = repoPathField.getText();
+        if (pathText == null || pathText.isBlank()) {
+                statusLabel.setText("Error: Repository path is empty.");
+                showErrorAlert("Invalid Path", "Please enter a valid repository path.");
+                updateSummaryAndChart(0, 0, 0);
+                return;
+        }
+
+        GitLogReader reader = new GitLogReader(Paths.get(pathText.trim()));
 
         int good = 0;
         int average = 0;
@@ -123,7 +133,7 @@ public class MainController {
                 }
 
                 String hashShort = record.getHash();
-                if (hashShort.length() > 7) {
+                if (hashShort != null && hashShort.length() > 7) {
                         hashShort = hashShort.substring(0, 7);
                 }
 
@@ -149,14 +159,7 @@ public class MainController {
                 updateSummaryAndChart(0, 0, 0);
 
                 statusLabel.setText("Error: " + e.getMessage());
-
-                // Show a dialog to user
-                javafx.scene.control.Alert alert =
-                        new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("Failed to load commits");
-                alert.setContentText(e.getMessage());
-                alert.showAndWait();
+                showErrorAlert("Failed to load commits", e.getMessage());
         }
     }
 
@@ -170,5 +173,14 @@ public class MainController {
                 new PieChart.Data("Average", average),
                 new PieChart.Data("Poor", poor)
         ));
+    }
+
+    private void showErrorAlert(String title, String message) {
+        javafx.scene.control.Alert alert =
+                new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(title);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
