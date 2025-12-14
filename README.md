@@ -63,3 +63,9 @@ quality levels and (later) visualizes results using a JavaFX interface.
 - Shortened hashes safely without risking substring errors
 - Displayed the active repository path in the toolbar for clarity
 
+---
+
+### Day 7
+- Updated UI 
+- Migrated from JavaFX to Spring Boot
+- Using repo url instead of repo local path
