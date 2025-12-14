@@ -1,5 +1,9 @@
 package com.bhaumik.gcqa.ui;
 
+import com.bhaumik.gcqa.core.CommitAnalyzer;
+import com.bhaumik.gcqa.core.GitLogReader;
+import com.bhaumik.gcqa.model.CommitRecord;
+import com.bhaumik.gcqa.model.CommitScore;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -9,11 +13,20 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 /**
  * Controller for the main view.
- * Day 4: only placeholder data and wiring.
+ * Day 5: hook UI with real Git + analyzer.
  */
 public class MainController {
+
+    // TODO: change this to your actual repo path
+    private static final String DEFAULT_REPO_PATH =
+            "/home/azazil/Desktop/dev-pro/git-commit-quality-analyzer";
 
     @FXML
     private TableView<CommitViewModel> commitTable;
@@ -51,6 +64,11 @@ public class MainController {
     private final ObservableList<CommitViewModel> commitData =
             FXCollections.observableArrayList();
 
+    private final CommitAnalyzer analyzer = new CommitAnalyzer();
+
+    private final DateTimeFormatter dateFormatter =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
     @FXML
     public void initialize() {
         // Configure table columns
@@ -61,28 +79,72 @@ public class MainController {
         scoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
         categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
 
-        // For Day 4: add some dummy placeholder rows
-        commitData.addAll(
-                new CommitViewModel("a1b2c3d", "User 1", "2025-12-07",
-                        "Add initial project structure", 80, "Good"),
-                new CommitViewModel("d4e5f6g", "User 2", "2025-12-06",
-                        "Update README", 60, "Average"),
-                new CommitViewModel("h7i8j9k", "User 3", "2025-12-05",
-                        "fix", 20, "Poor")
-        );
-
         commitTable.setItems(commitData);
 
-        // Summary counts (dummy for now)
-        goodCountLabel.setText("1");
-        averageCountLabel.setText("1");
-        poorCountLabel.setText("1");
+        // Initial load
+        loadDataFromRepo();
+    }
 
-        // Dummy pie chart data
+    @FXML
+    private void onRefreshClicked() {
+        loadDataFromRepo();
+    }
+
+    private void loadDataFromRepo() {
+        commitData.clear();
+
+        GitLogReader reader = new GitLogReader(Paths.get(DEFAULT_REPO_PATH));
+
+        int good = 0;
+        int average = 0;
+        int poor = 0;
+
+        try {
+            // You can change limit if you want more/less commits
+            List<CommitRecord> records = reader.readCommits(50);
+
+            for (CommitRecord record : records) {
+                CommitScore score = analyzer.analyze(record);
+                String category = score.getCategory();
+
+                switch (category) {
+                    case "Good" -> good++;
+                    case "Average" -> average++;
+                    case "Poor" -> poor++;
+                    default -> { }
+                }
+
+                CommitViewModel vm = new CommitViewModel(
+                        record.getHash().substring(0, 7),
+                        record.getAuthor(),
+                        record.getDateTime().format(dateFormatter),
+                        record.getMessage(),
+                        score.getScore(),
+                        category
+                );
+
+                commitData.add(vm);
+            }
+
+            updateSummaryAndChart(good, average, poor);
+
+        } catch (IOException e) {
+            // For Day 5, just print - proper UI error handling on Day 6
+            System.err.println("Failed to load git commits: " + e.getMessage());
+            commitData.clear();
+            updateSummaryAndChart(0, 0, 0);
+        }
+    }
+
+    private void updateSummaryAndChart(int good, int average, int poor) {
+        goodCountLabel.setText(String.valueOf(good));
+        averageCountLabel.setText(String.valueOf(average));
+        poorCountLabel.setText(String.valueOf(poor));
+
         qualityPieChart.setData(FXCollections.observableArrayList(
-                new PieChart.Data("Good", 1),
-                new PieChart.Data("Average", 1),
-                new PieChart.Data("Poor", 1)
+                new PieChart.Data("Good", good),
+                new PieChart.Data("Average", average),
+                new PieChart.Data("Poor", poor)
         ));
     }
 }
