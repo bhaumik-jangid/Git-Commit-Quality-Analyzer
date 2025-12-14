@@ -2,56 +2,81 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.bhaumik.gcqa</groupId>
-    <artifactId>git-commit-quality-analyzer</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <name>Git Commit Quality Analyzer</name>
+  <groupId>com.bhaumik.gcqa</groupId>
+  <artifactId>git-commit-quality-analyzer</artifactId>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
 
-    <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <javafx.version>21.0.2</javafx.version> <!-- change if needed -->
-    </properties>
+  <!-- Use Spring Boot parent to manage dependency versions -->
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.1.4</version>
+    <relativePath/> <!-- lookup parent from repository -->
+  </parent>
 
-    <dependencies>
-        <!-- JUnit (auto-added by archetype, keep it) -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
-            <scope>test</scope>
-        </dependency>
+  <properties>
+    <java.version>17</java.version>
+    <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
+    <spring.boot.maven.plugin.version>3.1.4</spring.boot.maven.plugin.version>
+  </properties>
 
-        <!-- JavaFX Controls for UI -->
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>${javafx.version}</version>
-        </dependency>
+  <dependencies>
+    <!-- Spring Web -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
 
-        <!-- Optional: JavaFX FXML if you plan to use FXML -->
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>${javafx.version}</version>
-        </dependency>
-    </dependencies>
+    <!-- Optional actuator -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
 
-    <build>
-        <plugins>
-            <!-- JavaFX Maven Plugin to run the app -->
-            <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.8</version>
-                <configuration>
-                    <mainClass>com.bhaumik.gcqa.ui.MainApp</mainClass>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+    <!-- Keep tests -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- Compiler plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.compiler.plugin.version}</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+        </configuration>
+      </plugin>
+
+      <!-- Spring Boot plugin -->
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>${spring.boot.maven.plugin.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
-

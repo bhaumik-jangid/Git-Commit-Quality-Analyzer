@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Git Commit Quality Analyzer</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div id="app">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="title">
+        <h1>Git Commit Quality Analyzer</h1>
+        <div class="subtitle">
+          Repo Path: <span id="repoDisplay">—</span>
+        </div>
+      </div>
+
+      <div class="controls">
+        <input id="repoUrl" type="text" placeholder="https://github.com/user/repo.git" value="https://github.com/bhaumik-jangid/Git-Commit-Quality-Analyzer"/>
+        <button id="analyzeBtn">Refresh</button>
+      </div>
+    </header>
+
+    <!-- STATS -->
+    <section class="cards">
+      <div class="card">
+        <div class="card-label">TOTAL COMMITS</div>
+        <div id="total" class="card-value">0</div>
+      </div>
+      <div class="card">
+        <div class="card-label">GOOD %</div>
+        <div id="goodPct" class="card-value">0%</div>
+      </div>
+      <div class="card">
+        <div class="card-label">POOR %</div>
+        <div id="poorPct" class="card-value">0%</div>
+      </div>
+      <div class="card">
+        <div class="card-label">AVG SCORE</div>
+        <div id="avg" class="card-value">0</div>
+      </div>
+    </section>
+
+    <!-- MAIN -->
+    <main>
+      <!-- TABLE -->
+      <div id="tableWrap">
+        <div id="tableScrollBox" class="table-scrollbox">
+          <table id="commitsTable">
+            <thead>
+              <tr>
+                <th>Hash</th>
+                <th>Author</th>
+                <th>Date</th>
+                <th>Message</th>
+                <th>Score</th>
+                <th>Category</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CHARTS -->
+      <aside id="charts">
+        <div class="chart-card pie-card">
+          <div class="chart-title">Commit Quality Distribution</div>
+          <div class="pie-container">
+            <canvas id="pieChart"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">Score Trend</div>
+          <canvas id="lineChart"></canvas>
+        </div>
+      </aside>
+    </main>
+
+    <footer id="status">Status: idle</footer>
+
+  </div>
+
+  <div id="loadingOverlay">
+    <div class="loader-box">
+      <div class="spinner"></div>
+      <div class="loader-text">Cloning repository…</div>
+    </div>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>

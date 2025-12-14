@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,27 +21,35 @@ public class GitLogReader {
         this.repoPath = repoPath;
     }
 
-    public List<CommitRecord> readCommits(int limit) throws IOException {
+    public List<CommitRecord> readCommits(int maxCount) throws IOException {
+
         List<CommitRecord> records = new ArrayList<>();
 
-        List<String> command = List.of(
-                "git",
-                "-C", repoPath.toString(),
-                "log",
-                "-n", String.valueOf(limit),
-                "--pretty=format:%H|%an|%ad|%s",
-                "--date=iso"
-        );
+        // ✅ DEFINE command properly
+        List<String> command = new ArrayList<>();
+        command.add("git");
+        command.add("-C");
+        command.add(repoPath.toString());
+        command.add("log");
+        command.add("--pretty=format:%H|%an|%ad|%s");
+        command.add("--date=iso");
+
+        if (maxCount > 0) {
+            command.add("-n");
+            command.add(String.valueOf(maxCount));
+        }
 
         ProcessBuilder builder = new ProcessBuilder(command);
         Process process = builder.start();
 
         StringBuilder errorOutput = new StringBuilder();
 
-        try (BufferedReader stdout =
-                    new BufferedReader(new InputStreamReader(process.getInputStream()));
-            BufferedReader stderr =
-                    new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
+        try (
+            BufferedReader stdout = new BufferedReader(
+                    new InputStreamReader(process.getInputStream()));
+            BufferedReader stderr = new BufferedReader(
+                    new InputStreamReader(process.getErrorStream()))
+        ) {
 
             String line;
             while ((line = stdout.readLine()) != null) {
@@ -57,15 +64,15 @@ public class GitLogReader {
                 errorOutput.append(errLine).append(System.lineSeparator());
             }
 
-        } catch (IOException e) {
-            throw new IOException("Error reading git command output", e);
         }
 
         try {
             int exitCode = process.waitFor();
             if (exitCode != 0) {
-                throw new IOException("git log failed with exit code " + exitCode +
-                        ". Error: " + errorOutput);
+                throw new IOException(
+                        "git log failed with exit code " + exitCode +
+                        "\nError:\n" + errorOutput
+                );
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -77,24 +84,17 @@ public class GitLogReader {
 
     private CommitRecord parseLine(String line) {
         String[] parts = line.split("\\|", 4);
-        if (parts.length < 4) {
-            return null;
-        }
+        if (parts.length < 4) return null;
 
-        String hash = parts[0].trim();
-        String author = parts[1].trim();
-        String dateStr = parts[2].trim();
-        String message = parts[3].trim();
-
-        LocalDateTime dateTime;
         try {
-            dateTime = LocalDateTime.parse(dateStr, dateTimeFormatter);
+            return new CommitRecord(
+                    parts[0].trim(),
+                    parts[1].trim(),
+                    LocalDateTime.parse(parts[2].trim(), dateTimeFormatter),
+                    parts[3].trim()
+            );
         } catch (Exception e) {
-            // If date parsing fails, skip this commit
             return null;
         }
-
-        return new CommitRecord(hash, author, dateTime, message);
     }
-
 }
