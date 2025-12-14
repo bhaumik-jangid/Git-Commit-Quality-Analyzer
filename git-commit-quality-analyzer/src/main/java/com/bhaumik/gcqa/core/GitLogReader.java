@@ -35,32 +35,41 @@ public class GitLogReader {
         );
 
         ProcessBuilder builder = new ProcessBuilder(command);
-        builder.redirectErrorStream(true);
-
         Process process = builder.start();
 
-        try (BufferedReader reader =
-                 new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+        StringBuilder errorOutput = new StringBuilder();
+
+        try (BufferedReader stdout =
+                    new BufferedReader(new InputStreamReader(process.getInputStream()));
+            BufferedReader stderr =
+                    new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
 
             String line;
-            while ((line = reader.readLine()) != null) {
+            while ((line = stdout.readLine()) != null) {
                 CommitRecord record = parseLine(line);
                 if (record != null) {
                     records.add(record);
                 }
             }
+
+            String errLine;
+            while ((errLine = stderr.readLine()) != null) {
+                errorOutput.append(errLine).append(System.lineSeparator());
+            }
+
+        } catch (IOException e) {
+            throw new IOException("Error reading git command output", e);
         }
 
-        // waitFor can throw InterruptedException — handle it and propagate as IOException
         try {
             int exitCode = process.waitFor();
             if (exitCode != 0) {
-                throw new IOException("git log failed (exit code: " + exitCode + ")");
+                throw new IOException("git log failed with exit code " + exitCode +
+                        ". Error: " + errorOutput);
             }
         } catch (InterruptedException e) {
-            // restore interrupt status and wrap
             Thread.currentThread().interrupt();
-            throw new IOException("Interrupted while waiting for git process", e);
+            throw new IOException("git log interrupted", e);
         }
 
         return records;
@@ -77,10 +86,15 @@ public class GitLogReader {
         String dateStr = parts[2].trim();
         String message = parts[3].trim();
 
-        // git --date=iso produces an offset like "2025-12-09 10:00:00 +0530"
-        OffsetDateTime odt = OffsetDateTime.parse(dateStr, dateTimeFormatter);
-        LocalDateTime dateTime = odt.toLocalDateTime();
+        LocalDateTime dateTime;
+        try {
+            dateTime = LocalDateTime.parse(dateStr, dateTimeFormatter);
+        } catch (Exception e) {
+            // If date parsing fails, skip this commit
+            return null;
+        }
 
         return new CommitRecord(hash, author, dateTime, message);
     }
+
 }
