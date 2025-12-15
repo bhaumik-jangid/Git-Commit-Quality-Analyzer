@@ -23,7 +23,6 @@ body {
   padding: 16px;
 }
 
-/* Top bar */
 .topbar {
   display: flex;
   justify-content: space-between;
@@ -76,13 +75,11 @@ body {
   margin-top: 6px;
 }
 
-/* Layout */
 main {
   display: flex;
   gap: 14px;
 }
 
-/* Table */
 #tableWrap {
   flex: 1;
   background: var(--panel);
@@ -148,13 +145,10 @@ footer {
 }
 
 
-/* --- PIE CHART SIZE CONTROL --- */
 .pie-card {
   height: 320px;
-  /* fixed card height */
   display: flex;
   flex-direction: column;
-  /* border-radius: 50%; */
 }
 
 .pie-container {
@@ -163,12 +157,10 @@ footer {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  /* IMPORTANT: prevents overflow */
 }
 
 .pie-container canvas {
   width: 220px !important;
-  /* HARD LIMIT */
   height: 220px !important;
   max-width: 220px;
   max-height: 220px;

@@ -19,7 +19,6 @@ const repoCreated = document.getElementById('repoCreated');
 
 let pieChart, lineChart;
 
-/* ---------- PIE GLOW PLUGIN ---------- */
 const pieGlowPlugin = {
     id: 'pieGlow',
     beforeDatasetDraw(chart) {
@@ -34,7 +33,6 @@ const pieGlowPlugin = {
     }
 };
 
-/* ---------- ANALYZE ---------- */
 async function analyze() {
     const repoUrl = document.getElementById('repoUrl').value.trim();
     if (!repoUrl) {
@@ -56,7 +54,6 @@ async function analyze() {
         const { repoPath } = await res.json();
         repoDisplay.textContent = repoPath;
 
-        // now call existing analyzer
         const commitsRes = await fetch(
             `/api/analyze?repoPath=${encodeURIComponent(repoPath)}`
         );
@@ -71,7 +68,6 @@ async function analyze() {
 }
 
 
-/* ---------- RENDER ---------- */
 function render(commits) {
     tbody.innerHTML = '';
 
@@ -102,7 +98,6 @@ function render(commits) {
     poorPctEl.textContent = total ? Math.round((poor / total) * 100) + '%' : '0%';
     avgEl.textContent = total ? (sum / total).toFixed(1) : '0';
 
-    /* PIE */
     if (pieChart) pieChart.destroy();
     pieChart = new Chart(document.getElementById('pieChart'), {
         type: 'pie',
@@ -125,7 +120,6 @@ function render(commits) {
         }
     });
 
-    /* LINE */
     if (lineChart) lineChart.destroy();
     lineChart = new Chart(document.getElementById('lineChart'), {
         type: 'line',
@@ -147,7 +141,6 @@ function render(commits) {
 
 analyzeBtn.addEventListener('click', analyze);
 
-// default value
 repoPathEl.value = '/home/azazil/Desktop/dev-pro/git-commit-quality-analyzer';
 
 function showLoader(show) {

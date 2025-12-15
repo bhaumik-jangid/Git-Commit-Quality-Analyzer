@@ -25,7 +25,6 @@ public class GitLogReader {
 
         List<CommitRecord> records = new ArrayList<>();
 
-        // ✅ DEFINE command properly
         List<String> command = new ArrayList<>();
         command.add("git");
         command.add("-C");

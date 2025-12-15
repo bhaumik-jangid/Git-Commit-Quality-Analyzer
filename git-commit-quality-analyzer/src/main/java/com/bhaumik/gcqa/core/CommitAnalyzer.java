@@ -20,39 +20,38 @@ public class CommitAnalyzer {
     ));
 
     public CommitScore analyze(CommitRecord record) {
+
         String message = record.getMessage();
-        if (message == null) {
+        if (message == null || message.trim().isEmpty()) {
             return new CommitScore(0, "Poor");
         }
 
         String normalized = message.trim();
         String lower = normalized.toLowerCase(Locale.ROOT);
 
-        int score = 0;
+        int score = 60;
 
-        // 1. Length score
-        int lengthScore = lengthScore(normalized);
-        score += lengthScore;
+        int len = normalized.length();
+        if (len >= 15 && len <= 72) score += 10;
+        else if (len > 72) score += 5;
+        else if (len < 10) score -= 10;
 
-        // 2. Keyword score
-        int keywordScore = keywordScore(lower);
-        score += keywordScore;
+        if (lower.matches(".*\\b(add|implement|introduce|create)\\b.*")) score += 8;
+        if (lower.matches(".*\\b(refactor|optimize|cleanup|restructure)\\b.*")) score += 6;
+        if (lower.matches(".*\\b(fix|bug|issue|hotfix)\\b.*")) score += 4;
+        if (lower.matches(".*\\b(test|ci|pipeline|build)\\b.*")) score += 6;
+        if (lower.matches(".*\\b(docs|readme|comment)\\b.*")) score += 3;
 
-        // 3. Bad pattern penalty
-        int badPenalty = badPenalty(lower);
-        score += badPenalty;
+        if (lower.matches("^(update|changes|misc|temp|test)$")) score -= 20;
+        if (lower.length() < 6) score -= 15;
 
-        // 4. Starts-with-verb bonus
-        int startBonus = startsWithVerbBonus(lower);
-        score += startBonus;
+        if (normalized.contains(":")) score += 5;        
+        if (normalized.contains("#")) score += 3;        
+        if (Character.isUpperCase(normalized.charAt(0))) score += 2;
 
-        // Clamp between 0 and 100
-        if (score < 0) score = 0;
-        if (score > 100) score = 100;
+        score = Math.max(0, Math.min(100, score));
 
-        String category = categorize(score);
-
-        return new CommitScore(score, category);
+        return new CommitScore(score, categorize(score));
     }
 
     private int lengthScore(String msg) {
@@ -89,7 +88,6 @@ public class CommitAnalyzer {
     }
 
     private int startsWithVerbBonus(String lowerMsg) {
-        // Get first word
         String[] parts = lowerMsg.split("\\s+");
         if (parts.length == 0) {
             return 0;

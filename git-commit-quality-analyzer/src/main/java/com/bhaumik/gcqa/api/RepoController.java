@@ -15,7 +15,6 @@ public class RepoController {
 
     private static final String BASE_REPO_DIR = "/home/azazil/git-repos";
 
-    // -------------------- PREPARE / CLONE REPO --------------------
     @PostMapping("/prepare")
     public ResponseEntity<Map<String, String>> prepareRepo(
             @RequestBody Map<String, String> body
@@ -49,7 +48,6 @@ public class RepoController {
         );
     }
 
-    // -------------------- LIST CLONED REPOS --------------------
     @GetMapping("/list")
     public ResponseEntity<List<Map<String, String>>> listRepos()
             throws IOException, InterruptedException {
@@ -82,7 +80,6 @@ public class RepoController {
         return ResponseEntity.ok(repos);
     }
 
-    // -------------------- GIT HELPERS --------------------
     private String runGit(Path repo, String... args)
             throws IOException, InterruptedException {
 
