@@ -20,7 +20,7 @@ public class AnalyzeController {
     @GetMapping("/analyze")
     public ResponseEntity<?> analyze(
             @RequestParam String repoPath,
-            @RequestParam(defaultValue = "200") int limit
+            @RequestParam(defaultValue = "1200") int limit
     ) {
         try {
             GitLogReader reader = new GitLogReader(Paths.get(repoPath));
